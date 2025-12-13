@@ -10,7 +10,7 @@ public class Board {
         grid = new Piece[rows][columns];
         initialize();
     }
-    public void initialize(){
+    private void initialize(){
         for(int i = 0; i < rows; i++)
         {
             for(int j = 0; j < columns; j++)
@@ -19,23 +19,6 @@ public class Board {
             }
         }
     }
-    public boolean dropPiece(int column, Piece piece)
-    {
-        if(column < 0 || column >= columns)
-        {
-            return false;
-        }
-        for(int i = rows - 1; i >= 0; i--)
-        {
-            if(grid[i][column] == Piece.EMPTY)
-            {
-                grid[i][column] = piece;
-                return true;
-            }
-        }
-        return false;
-    }
-
     private boolean checkHorizontal(Piece piece) {
         for(int i = 0; i < rows; i++)
         {
@@ -81,18 +64,42 @@ public class Board {
                 }
             }
         }
-        for(int i = rows - 4; i >= 3; i--)
+        // ↗ Up-right
+        for (int r = 3; r < rows; r++)
         {
-            for(int j = columns - 4; j >= 3; j--)
+            for (int c = 0; c <= columns - 4; c++)
             {
-                if(grid[i][j] == piece && grid[i-1][j-1] == piece && grid[i-2][j-2] == piece && grid[i-3][j-3] == piece)
-                {
+                if (grid[r][c] == piece &&
+                        grid[r - 1][c + 1] == piece &&
+                        grid[r - 2][c + 2] == piece &&
+                        grid[r - 3][c + 3] == piece) {
                     return true;
                 }
             }
         }
         return false;
     }
+    public Piece getCell(int row, int col)
+    {
+        return grid[row][col];
+    }
+    public boolean dropPiece(int column, Piece piece)
+    {
+        if(column < 0 || column >= columns)
+        {
+            return false;
+        }
+        for(int i = rows - 1; i >= 0; i--)
+        {
+            if(grid[i][column] == Piece.EMPTY)
+            {
+                grid[i][column] = piece;
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean checkDraw() {
         for(int i = 0; i < columns; i++)
         {
