@@ -1,6 +1,6 @@
 package liam.connectfour.model;
 
-public enum piece {
+public enum Piece {
     RED,
     YELLOW,
     EMPTY
