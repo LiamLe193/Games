@@ -1,8 +1,8 @@
 package liam.connectfour.model;
 
 public class Board {
-    private final int rows = 6;
-    private final int columns = 7;
+    private static final int rows = 6;
+    private static final int columns = 7;
     private final Piece[][] grid;
     //private final List<List<piece>> availableMoves = new ArrayList<>();
 
@@ -105,7 +105,7 @@ public class Board {
     }
     public boolean hasWinner(Piece piece)
     {
-        return (checkDiagonal(piece) && checkHorizontal(piece) && checkVertical(piece));
+        return (checkDiagonal(piece) || checkHorizontal(piece) || checkVertical(piece));
     }
 
 
