@@ -69,7 +69,7 @@ public class Board {
         }
         return false;
     }
-    public boolean checkDiagonal(Piece piece)
+    private boolean checkDiagonal(Piece piece)
     {
         for(int i = 0; i < rows - 4; i++)
         {
@@ -81,9 +81,9 @@ public class Board {
                 }
             }
         }
-        for(int i = rows - 4; i >= 0; i--)
+        for(int i = rows - 4; i >= 3; i--)
         {
-            for(int j = columns - 4; j >= 0; j--)
+            for(int j = columns - 4; j >= 3; j--)
             {
                 if(grid[i][j] == piece && grid[i-1][j-1] == piece && grid[i-2][j-2] == piece && grid[i-3][j-3] == piece)
                 {
