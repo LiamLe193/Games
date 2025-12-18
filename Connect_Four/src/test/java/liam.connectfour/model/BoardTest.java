@@ -1,5 +1,7 @@
 package liam.connectfour.model;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,61 +58,20 @@ class BoardTest {
         assertFalse(board.checkDraw());
     }
 
-
-    @Test
-    void one_missing_checkDraw() {
+    @ParameterizedTest
+    @ValueSource(ints = {0, 3, 6})
+    void checkDraw_falseWhenTopCellEmpty(int column) {
         Board board = new Board();
-        for(int i = 0; i < board.getColumns(); i++)
-        {
-            for(int j = board.getRows() - 1; j >= 0; j--)
-            {
-                if(i == 0 && j == 0)
-                {
-                    continue;
-                }
-                if(j % 2 == 0)
-                {
-                    board.dropPiece(i,Piece.RED);
-                }
-                else board.dropPiece(i, Piece.YELLOW);
-            }
-        }
-        assertFalse(board.checkDraw());
-        board = new Board();
-        for(int i = 0; i < board.getColumns(); i++)
-        {
-            for(int j = board.getRows() - 1; j >= 0; j--)
-            {
-                if(i == 3 && j == 5)
-                {
-                    continue;
-                }
-                if(j % 2 == 0)
-                {
-                    board.dropPiece(i,Piece.RED);
-                }
-                else board.dropPiece(i, Piece.YELLOW);
-            }
-        }
-        assertFalse(board.checkDraw());
-        board = new Board();
-        for(int i = 0; i < board.getColumns(); i++)
-        {
-            for(int j = board.getRows() - 1; j >= 0; j--)
-            {
-                if(i == 6 && j == 5)
-                {
-                    continue;
-                }
-                if(j % 2 == 0)
-                {
-                    board.dropPiece(i,Piece.RED);
-                }
-                else board.dropPiece(i, Piece.YELLOW);
+
+        for (int col = 0; col < board.getColumns(); col++) {
+            for (int i = 0; i < board.getRows(); i++) {
+                if (col == column && i == 0) continue;
+                board.dropPiece(col, Piece.RED);
             }
         }
         assertFalse(board.checkDraw());
     }
+
     @Test
     void hasWinner_detectsVerticalWin() {
         Board board = new Board();
