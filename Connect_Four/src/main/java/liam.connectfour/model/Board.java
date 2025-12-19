@@ -114,8 +114,10 @@ public class Board {
     {
         return (checkDiagonal(piece) || checkHorizontal(piece) || checkVertical(piece));
     }
-
-
+    public boolean isColumnFull(int col)
+    {
+        return grid[0][col] != Piece.EMPTY;
+    }
     public int getRows() {
         return rows;
     }
