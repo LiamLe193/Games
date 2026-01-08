@@ -1,87 +1,113 @@
 package liam.connectfour.model;
 
+import java.util.Collections;
+import java.util.List;
+import liam.connectfour.model.Position;
+
 public class Board {
     private static final int rows = 6;
     private static final int columns = 7;
     private final Piece[][] grid;
-    //private final List<List<piece>> availableMoves = new ArrayList<>();
 
     public Board() {
         grid = new Piece[rows][columns];
         initialize();
     }
-    private void initialize(){
-        for(int i = 0; i < rows; i++)
-        {
-            for(int j = 0; j < columns; j++)
-            {
+
+    private void initialize() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
                 grid[i][j] = Piece.EMPTY;
             }
         }
     }
-    private boolean checkHorizontal(Piece piece) {
-        for(int i = 0; i < rows; i++)
-        {
-            for(int j = 0; j < columns - 4; j++)
-            {
-                if(grid[i][j] == piece
-                        && grid[i][j + 1] == piece
-                        && grid[i][j + 2] == piece
-                        && grid[i][j + 3] == piece)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    private boolean checkVertical(Piece piece)
-    {
-        for(int i = 0; i < columns; i++)
-        {
-            for(int j = 0; j < rows - 4; j++)
-            {
-                if(grid[j][i] == piece
-                        && grid[j + 1][i] == piece
-                        && grid[j + 2][i] == piece
-                        && grid[j + 3][i] == piece)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    private boolean checkDiagonal(Piece piece)
-    {
-        for(int i = 0; i < rows - 4; i++)
-        {
-            for(int j = 0; j < columns - 4; j++)
-            {
-                if(grid[i][j] == piece && grid[i+1][j+1] == piece && grid[i+2][j+2] == piece && grid[i+3][j+3] == piece)
-                {
-                    return true;
-                }
-            }
-        }
-        // ↗ Up-right
-        for (int r = 3; r < rows; r++)
-        {
-            for (int c = 0; c <= columns - 4; c++)
-            {
-                if (grid[r][c] == piece &&
-                        grid[r - 1][c + 1] == piece &&
-                        grid[r - 2][c + 2] == piece &&
-                        grid[r - 3][c + 3] == piece) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
     public Piece getCell(int row, int col)
     {
         return grid[row][col];
+    }
+    public void reset() {
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < columns; c++) {
+                grid[r][c] = Piece.EMPTY;
+            }
+        }
+    }
+
+    public List<Position> getWinningPositions(Piece piece) {
+
+        // 1. Horizontal
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col <= columns - 4; col++) {
+                if (grid[row][col] == piece &&
+                        grid[row][col + 1] == piece &&
+                        grid[row][col + 2] == piece &&
+                        grid[row][col + 3] == piece) {
+
+                    return List.of(
+                            new Position(row, col),
+                            new Position(row, col + 1),
+                            new Position(row, col + 2),
+                            new Position(row, col + 3)
+                    );
+                }
+            }
+        }
+
+        // 2. Vertical
+        for (int col = 0; col < columns; col++) {
+            for (int row = 0; row <= rows - 4; row++) {
+                if (grid[row][col] == piece &&
+                        grid[row + 1][col] == piece &&
+                        grid[row + 2][col] == piece &&
+                        grid[row + 3][col] == piece) {
+
+                    return List.of(
+                            new Position(row, col),
+                            new Position(row + 1, col),
+                            new Position(row + 2, col),
+                            new Position(row + 3, col)
+                    );
+                }
+            }
+        }
+
+        // 3. Diagonal (down-right)
+        for (int row = 0; row <= rows - 4; row++) {
+            for (int col = 0; col <= columns - 4; col++) {
+                if (grid[row][col] == piece &&
+                        grid[row + 1][col + 1] == piece &&
+                        grid[row + 2][col + 2] == piece &&
+                        grid[row + 3][col + 3] == piece) {
+
+                    return List.of(
+                            new Position(row, col),
+                            new Position(row + 1, col + 1),
+                            new Position(row + 2, col + 2),
+                            new Position(row + 3, col + 3)
+                    );
+                }
+            }
+        }
+
+        // 4. Diagonal (up-right)
+        for (int row = 3; row < rows; row++) {
+            for (int col = 0; col <= columns - 4; col++) {
+                if (grid[row][col] == piece &&
+                        grid[row - 1][col + 1] == piece &&
+                        grid[row - 2][col + 2] == piece &&
+                        grid[row - 3][col + 3] == piece) {
+
+                    return List.of(
+                            new Position(row, col),
+                            new Position(row - 1, col + 1),
+                            new Position(row - 2, col + 2),
+                            new Position(row - 3, col + 3)
+                    );
+                }
+            }
+        }
+
+        return Collections.emptyList();
     }
     public boolean dropPiece(int column, Piece piece)
     {
@@ -99,7 +125,14 @@ public class Board {
         }
         return false;
     }
-
+    public int getNextAvailableRow(int column) {
+        for (int row = rows - 1; row >= 0; row--) {
+            if (grid[row][column] == Piece.EMPTY) {
+                return row;
+            }
+        }
+        return -1;
+    }
     public boolean checkDraw() {
         for(int i = 0; i < columns; i++)
         {
@@ -112,7 +145,7 @@ public class Board {
     }
     public boolean hasWinner(Piece piece)
     {
-        return (checkDiagonal(piece) || checkHorizontal(piece) || checkVertical(piece));
+        return !getWinningPositions(piece).isEmpty();
     }
     public boolean isColumnFull(int col)
     {

@@ -12,6 +12,8 @@ public class GameController {
     private final Board board;
     private final Player redPlayer;
     private final Player yellowPlayer;
+    private Piece currentPiece = Piece.RED;
+    private boolean gameOver = false;
 
     private Player currentPlayer;
     private Player otherPlayer;
@@ -51,6 +53,7 @@ public class GameController {
     {
         return board.hasWinner(currentPlayer.getPiece()) || board.checkDraw();
     }
+
     public void startGame() {
         while (!gameEnd()) {
             if (executeTurn()) {
